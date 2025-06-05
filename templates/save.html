@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save 2FA Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-sm animate__fadeIn">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h1 class="h4 mb-0">Save 2FA Data</h1>
+                <button id="theme-toggle" class="btn btn-light btn-sm">Toggle Dark Mode</button>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="save-form">
+                    <div class="mb-3">
+                        <label for="uid" class="form-label">UID</label>
+                        <input type="text" class="form-control animate__fadeIn" id="uid" name="uid" value="{{ uid or '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="secret_key" class="form-label">2FA Key</label>
+                        <input type="text" class="form-control animate__fadeIn" id="secret_key" name="secret_key" value="{{ secret_key or '' }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-animated">Save & Generate</button>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-animated">Back to Menu</a>
+                </form>
+                <div id="loading-animation" style="display: none; max-width: 200px; margin: 20px auto;">
+                    <lottie-player src="{{ url_for('static', filename='animations/loading.json') }}" background="transparent" speed="1" loop autoplay></lottie-player>
+                </div>
+                {% if code %}
+                    <div class="mt-4">
+                        <div id="success-animation" style="max-width: 200px; margin: 0 auto;">
+                            <lottie-player src="{{ url_for('static', filename='animations/success.json') }}" background="transparent" speed="1" autoplay></lottie-player>
+                        </div>
+                        <h3>2FA Code: <span id="current-code" class="badge bg-success animate__pulse animate__infinite">{{ code }}</span></h3>
+                        <p>Refreshing in: <span id="remaining-time">{{ remaining }}</span>s</p>
+                        <div class="progress">
+                            <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-gradient" role="progressbar" style="width: {{ (remaining / 30 * 100) }}%"></div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="toast animate__slideInRight align-items-center text-white bg-{{ category }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">{{ message }}</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    {% if secret_key %}
+        <script>
+            start2FARefresh('{{ secret_key }}', '{{ uid }}');
+        </script>
+    {% endif %}
+</body>
+</html>
