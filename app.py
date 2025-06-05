@@ -126,4 +126,8 @@ def set_password():
     return render_template('set_password.html', default_password=default_password)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Development mode
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=True)
+else:
+    # Production mode with Gunicorn
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
