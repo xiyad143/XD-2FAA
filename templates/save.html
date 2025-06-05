@@ -32,7 +32,7 @@
                     <lottie-player src="{{ url_for('static', filename='animations/loading.json') }}" background="transparent" speed="1" loop autoplay></lottie-player>
                 </div>
                 {% if code %}
-                    <div class="mt-4">
+                    <div class="mt-4" id="code-display">
                         <div id="success-animation" style="max-width: 200px; margin: 0 auto;">
                             <lottie-player src="{{ url_for('static', filename='animations/success.json') }}" background="transparent" speed="1" autoplay></lottie-player>
                         </div>
@@ -41,6 +41,7 @@
                         <div class="progress">
                             <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-gradient" role="progressbar" style="width: {{ (remaining / 30 * 100) }}%"></div>
                         </div>
+                        <button id="stop-refresh" class="btn btn-danger btn-animated mt-3">Stop</button>
                     </div>
                 {% endif %}
             </div>
