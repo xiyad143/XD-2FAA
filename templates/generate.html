@@ -28,12 +28,13 @@
                     <lottie-player src="{{ url_for('static', filename='animations/loading.json') }}" background="transparent" speed="1" loop autoplay></lottie-player>
                 </div>
                 {% if code %}
-                    <div class="mt-4">
+                    <div class="mt-4" id="code-display">
                         <h3>2FA Code: <span id="current-code" class="badge bg-success animate__pulse animate__infinite">{{ code }}</span></h3>
                         <p>Refreshing in: <span id="remaining-time">{{ remaining }}</span>s</p>
                         <div class="progress">
                             <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-gradient" role="progressbar" style="width: {{ (remaining / 30 * 100) }}%"></div>
                         </div>
+                        <button id="stop-refresh" class="btn btn-danger btn-animated mt-3">Stop</button>
                     </div>
                 {% endif %}
             </div>
